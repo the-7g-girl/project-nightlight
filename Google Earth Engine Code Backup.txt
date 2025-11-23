@@ -1,0 +1,82 @@
+// Load Datasets
+
+var admin1 = ee.FeatureCollection("projects/sat-io/open-datasets/geoboundaries/CGAZ_ADM1");
+var ntlCollection = ee.ImageCollection("NOAA/VIIRS/DNB/ANNUAL_V21");
+var modisLandcover = ee.ImageCollection('MODIS/061/MCD12Q1');
+
+// Apply Filters
+
+// Select an Admin1 Region
+var region = 'Dow Chemicals';
+var admin1Filtered = admin1.filter(ee.Filter.eq('shapeName', region));
+// var geometry = admin1Filtered.geometry();
+Map.centerObject(geometry);
+
+var startYear = 2013;
+var endYear = 2021;
+
+var startDate = ee.Date.fromYMD(startYear, 1, 1);
+var endDate = ee.Date.fromYMD(endYear + 1, 1, 1);
+
+var band = 'average';
+
+var ntlFiltered = ntlCollection
+  .filter(ee.Filter.date(startDate, endDate))
+  .filter(ee.Filter.bounds(geometry))
+  .select(band);
+print('Filtered NTL collection', ntlFiltered);
+
+var projection = ntlFiltered.first().projection();
+var resolution = projection.nominalScale();
+print('NTL Image Resolution', resolution);
+
+
+// We now write a function to calculate night light for each image
+// This function will return a ee.Feature() with areas as properties
+
+// This function will be applied using .map() on each image
+// in the collection. 
+var calculateSol = function(image) {
+   var stats = image.reduceRegion({
+    reducer: ee.Reducer.sum(),
+    geometry: geometry,
+    scale: resolution,
+    maxPixels: 1e10,
+    tileScale: 16
+    });
+  var sol = stats.getNumber(band);
+  var feature = ee.Feature(null, {
+    'sol': sol,
+    'system:time_start': image.get('system:time_start')
+  });
+  return feature;
+};
+
+var ntlTimeSeries = ntlFiltered.map(calculateSol);
+print('SOL (Sum-of-Lights) Time Series', ntlTimeSeries);
+
+// Create a chart
+var chart = ui.Chart.feature.byFeature({
+    features: ntlTimeSeries,
+    xProperty: 'system:time_start',
+    yProperties: ['sol']
+  })
+  .setChartType('ColumnChart')
+  .setOptions({
+    title: 'Sum of Nighttime Lights Time Series for ' + region,
+    vAxis: {
+        title: 'SOL', 
+        // Set viewWindow so Y-axis starts from 0
+        viewWindow: {
+          min: 0
+        },
+        gridlines: {color: '#c7beb5'}
+      },
+      hAxis: {
+        title: '',
+        format: 'YYYY-MM',
+        gridlines: {color: '#c7beb5'}
+      },
+    legend: { position: 'none' },
+  });
+print(chart);
