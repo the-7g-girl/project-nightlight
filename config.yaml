@@ -1,0 +1,70 @@
+paths:
+  epa_file_path: "epa"
+
+threshold_ratio : 0.75
+
+columns_to_sort:
+  - "12. LATITUDE"
+  - "13. LONGITUDE"
+
+columns_to_group_by:
+  - "4. FACILITY NAME"
+  - "12. LATITUDE"
+  - "13. LONGITUDE"
+  - "22. INDUSTRY SECTOR CODE"
+
+target_columns:
+  '65. ON-SITE RELEASE TOTAL': 'ON-SITE RELEASE TOTAL'
+  '88. OFF-SITE RELEASE TOTAL': 'OFF-SITE RELEASE TOTAL'
+  '106. 6.2 - TOTAL TRANSFER': 'TOTAL TRANSFER'
+  '107. TOTAL RELEASES': 'TOTAL RELEASES'
+  '119. PRODUCTION WSTE (8.1-8.7)': 'PRODUCTION WASTE'
+years: 
+  - 2014
+  - 2015
+  - 2016
+  - 2017
+  - 2018
+  - 2019
+  - 2020
+  - 2021
+  - 2022
+  - 2023
+
+columns_to_remove:
+  - "1. YEAR"
+  - "2. TRIFD"
+  - "3. FRS ID"
+  - "5. STREET ADDRESS"
+  - "6. CITY"
+  - "7. COUNTY"
+  - "8. ST"
+  - "9. ZIP"
+  - "14. HORIZONTAL DATUM"
+  - "15. PARENT CO NAME"
+  - "16. PARENT CO DB NUM"
+  - "17. STANDARD PARENT CO NAME"
+  - "21. FEDERAL FACILITY"
+  - "23. INDUSTRY SECTOR"
+  - "30. PRIMARY NAICS"
+  - "36. DOC_CTRL_NUM"
+  - "37. CHEMICAL"
+  - "38. ELEMENTAL METAL INCLUDED"
+  - "39. TRI CHEMICAL/COMPOUND ID"
+  - "40. CAS#"
+  - "41. SRS ID"
+  - "42. CLEAN AIR ACT CHEMICAL"
+  - "43. CLASSIFICATION"
+  - "44. METAL"
+  - "45. METAL CATEGORY"
+  - "46. CARCINOGEN"
+  - "47. PBT"
+  - "48. PFAS"
+  - "49. FORM TYPE"
+  - "50. UNIT OF MEASURE"
+  - "51. 5.1 - FUGITIVE AIR"
+  - "52. 5.2 - STACK AIR"
+  - "110. 8.1B - ON-SITE OTHER"
+  - "122. 8.9 - PRODUCTION RATIO"
+  - "121. PROD_RATIO_OR_ ACTIVITY"
+
